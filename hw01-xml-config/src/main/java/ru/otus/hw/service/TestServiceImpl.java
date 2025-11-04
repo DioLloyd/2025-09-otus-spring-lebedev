@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
+import ru.otus.hw.exceptions.QuestionReadException;
 
 import java.util.List;
 
@@ -18,25 +19,29 @@ public class TestServiceImpl implements TestService {
     public void executeTest() {
         ioService.printLine("");
         ioService.printFormattedLine("Please answer the questions below%n");
-        List<Question> questions = questionDao.findAll();
-        printQuestions(questions);
+        try {
+            List<Question> questions = questionDao.findAll();
+            String formattedQuestions = convertQuestionsToString(questions);
+            ioService.printLine(formattedQuestions);
+        } catch (QuestionReadException e) {
+            ioService.printLine("Error: Could not load test questions. Please try again later.");
+        }
+
     }
 
-    private void printQuestions(List<Question> questions) {
+    private String convertQuestionsToString(List<Question> questions) {
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < questions.size(); i++) {
             Question question = questions.get(i);
-            ioService.printFormattedLine("%d. %s", i + 1, question.text());
+            sb.append(String.format("%d. %s%n", i + 1, question.text()));
             List<Answer> answers = question.answers();
-            printAnswers(answers);
-            ioService.printLine("");
+            for (int j = 0; j < answers.size(); j++) {
+                Answer answer = answers.get(j);
+                sb.append(String.format("   %d) %s%n", j + 1, answer.text()));
+            }
+            sb.append("\n");
         }
-    }
-
-    private void printAnswers(List<Answer> answers) {
-        for (int i = 0; i < answers.size(); i++) {
-            Answer answer = answers.get(i);
-            ioService.printFormattedLine("   %d) %s", i + 1, answer.text());
-        }
+        return sb.toString();
     }
 
 }
