@@ -19,14 +19,9 @@ public class TestServiceImpl implements TestService {
     public void executeTest() {
         ioService.printLine("");
         ioService.printFormattedLine("Please answer the questions below%n");
-        try {
-            List<Question> questions = questionDao.findAll();
-            String formattedQuestions = convertQuestionsToString(questions);
-            ioService.printLine(formattedQuestions);
-        } catch (QuestionReadException e) {
-            ioService.printLine("Error: Could not load test questions. Please try again later.");
-        }
-
+        List<Question> questions = questionDao.findAll();
+        String formattedQuestions = convertQuestionsToString(questions);
+        ioService.printLine(formattedQuestions);
     }
 
     private String convertQuestionsToString(List<Question> questions) {
