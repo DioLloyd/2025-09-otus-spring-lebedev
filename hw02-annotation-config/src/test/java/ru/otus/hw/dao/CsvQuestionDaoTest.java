@@ -2,38 +2,37 @@ package ru.otus.hw.dao;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.hw.config.TestFileNameProvider;
-import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
+import ru.otus.hw.helpers.QuestionHelper;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 @DisplayName("CsvQuestionDao Integration Test")
 public class CsvQuestionDaoTest {
+
+    @Mock
+    private TestFileNameProvider fileNameProvider;
 
     @Test
     @DisplayName("Should correctly read questions from a CSV file")
     void shouldReadQuestionsFromCsvFile() {
-        TestFileNameProvider fileNameProvider = () -> "test-questions.csv";
+        when(fileNameProvider.getTestFileName()).thenReturn("test-questions.csv");
         CsvQuestionDao dao = new CsvQuestionDao(fileNameProvider);
+        List<Question> expectedQuestions = QuestionHelper.getQuestions();
         List<Question> questions = dao.findAll();
-        assertThat(questions).hasSize(2);
-        Question firstQuestion = questions.get(0);
-        assertThat(firstQuestion.text()).isEqualTo("Who wrote The Brothers Karamazov?");
-        assertThat(firstQuestion.answers()).hasSize(4);
-        Answer firstAnswer = firstQuestion.answers().get(0);
-        assertThat(firstAnswer.text()).isEqualTo("Fyodor Mikhailovich Dostoevsky");
-        assertThat(firstAnswer.isCorrect()).isTrue();
-        Answer secondAnswer = firstQuestion.answers().get(1);
-        assertThat(secondAnswer.text()).isEqualTo("Alexander Sergeevich Pushkin");
-        assertThat(secondAnswer.isCorrect()).isFalse();
-        Question secondQuestion = questions.get(1);
-        assertThat(secondQuestion.text()).isEqualTo("At what traffic light should I cross the road?");
-        assertThat(secondQuestion.answers()).hasSize(3);
+        assertThat(questions)
+                .usingRecursiveComparison()
+                .isEqualTo(expectedQuestions);
     }
 
     @Test
