@@ -7,11 +7,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.hw.dao.QuestionDao;
-import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 import ru.otus.hw.exceptions.QuestionReadException;
+import ru.otus.hw.helpers.QuestionHelper;
 
 import java.util.List;
 
@@ -19,8 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
-@DisplayName("Test service tests")
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Test service tests")
 public class TestServiceTest {
 
     @Mock
@@ -31,27 +31,11 @@ public class TestServiceTest {
     private TestServiceImpl testService;
 
 
-    private List<Question> getQuestions() {
-        return List.of(
-                new Question("Is there life on Mars?", List.of(
-                        new Answer("Science doesn't know this yet", true),
-                        new Answer("Certainly. The red UFO is from Mars. And green is from Venus", false),
-                        new Answer("Absolutely not", false)
-                )),
-                new Question("How many days are there in a week?", List.of(
-                        new Answer("8", false),
-                        new Answer("6", false),
-                        new Answer("42", false),
-                        new Answer("7", true)
-                ))
-        );
-    }
-
     @Test
     @DisplayName("Should execute testing for student")
     void shouldExecuteTestingForStudent() {
         Student student = new Student("Ivan", "Ivanov");
-        List<Question> questions = getQuestions();
+        List<Question> questions = QuestionHelper.getQuestions();
         when(questionDao.findAll()).thenReturn(questions);
         when(ioService.readIntForRangeWithPrompt(anyInt(), anyInt(), anyString(), anyString()))
                 .thenReturn(1)
