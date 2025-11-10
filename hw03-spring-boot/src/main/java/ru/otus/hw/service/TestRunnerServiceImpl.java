@@ -14,9 +14,8 @@ public class TestRunnerServiceImpl implements TestRunnerService {
 
     private final ResultService resultService;
 
-    private final IOService ioService;
+    private final LocalizedIOService ioService;
 
-    // TODO Проверить после сдачи второго ДЗ
     @Override
     public void run() {
         try {
@@ -24,7 +23,7 @@ public class TestRunnerServiceImpl implements TestRunnerService {
             var testResult = testService.executeTestFor(student);
             resultService.showResult(testResult);
         } catch (QuestionReadException e) {
-            ioService.printLine("Error: Could not load test questions. Please try again later.");
+            ioService.printLineLocalized("TestRunnerService.error.loading.questions");
         }
     }
 }

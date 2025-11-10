@@ -33,16 +33,14 @@ public class TestServiceImpl implements TestService {
     }
 
     private boolean askQuestion(Question question) {
-        ioService.printFormattedLine("Question: %s", question.text());
+        ioService.printFormattedLineLocalized("TestService.ask.question", question.text());
         List<Answer> answers = question.answers();
         for (int i = 0; i < answers.size(); i++) {
             ioService.printFormattedLine("   %d. %s", i + 1, answers.get(i).text());
         }
-        int userAnswer = ioService.readIntForRangeWithPrompt(
-                1, answers.size(),
-                "Your answer: ",
-                "Please enter a number between 1 and " + answers.size()
-        );
+        String errorMessage = ioService.getMessage("TestService.error.answer", answers.size());
+        int userAnswer = ioService.readIntForRangeWithPromptLocalized(1, answers.size(),
+                "TestService.enter.answer", errorMessage);
         Answer selectedAnswer = answers.get(userAnswer - 1);
         return selectedAnswer.isCorrect();
     }
