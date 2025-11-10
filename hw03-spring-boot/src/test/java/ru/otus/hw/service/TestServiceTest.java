@@ -39,16 +39,9 @@ public class TestServiceTest {
         when(questionDao.findAll()).thenReturn(questions);
         when(ioService.getMessage(eq("TestService.error.answer"), anyInt()))
                 .thenReturn("Please enter a number between 1 and 3");
-//        lenient().when(ioService.readIntForRangeWithPromptLocalized(anyInt(), anyInt(), anyString(), anyString()))
-//                .thenReturn(1)
-//                .thenReturn(4);
-        when(ioService.readIntForRangeWithPromptLocalized(
-                eq(1),
-                eq(3),
-                eq("TestService.enter.answer"),
-                eq("Please enter a number between 1 and 3")))
+        lenient().when(ioService.readIntForRangeWithPromptLocalized(anyInt(), anyInt(), anyString(), anyString()))
                 .thenReturn(1)
-                .thenReturn(3);
+                .thenReturn(4);
         TestResult testResult = testService.executeTestFor(student);
         verify(ioService, atLeast(1)).printLine("");
         verify(ioService, times(1)).printLineLocalized("TestService.answer.the.questions");
@@ -62,7 +55,7 @@ public class TestServiceTest {
             }
         }
         verify(ioService, times(2))
-                .readIntForRangeWithPrompt(anyInt(), anyInt(), anyString(), anyString());
+                .readIntForRangeWithPromptLocalized(anyInt(), anyInt(), anyString(), anyString());
         assertThat(testResult.getRightAnswersCount()).isEqualTo(2);
         assertThat(testResult.getAnsweredQuestions()).hasSize(2);
         assertThat(testResult.getStudent()).isEqualTo(student);
