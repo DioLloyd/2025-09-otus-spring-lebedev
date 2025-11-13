@@ -1,0 +1,20 @@
+spring:
+  messages:
+    baseName: messages
+    encoding: UTF-8
+    fallbackToSystemLocale: false
+    useCodeAsDefaultMessage: true
+  banner:
+    location: classpath:banner.txt
+  output:
+    ansi:
+      enable: ALWAYS
+  shell:
+    interactive:
+      enabled: true
+test:
+  rightAnswersCountToPass: 3
+  locale: ru-RU
+  fileNameByLocaleTag:
+    ru-RU: questions_ru.csv
+    en-US: questions.csv
