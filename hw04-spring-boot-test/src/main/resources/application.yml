@@ -5,10 +5,13 @@ spring:
     fallbackToSystemLocale: false
     useCodeAsDefaultMessage: true
   banner:
-      location: classpath:banner.txt
+    location: classpath:banner.txt
   output:
     ansi:
       enable: ALWAYS
+  shell:
+    interactive:
+      enabled: true
 test:
   rightAnswersCountToPass: 3
   locale: ru-RU

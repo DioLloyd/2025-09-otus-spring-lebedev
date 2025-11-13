@@ -3,9 +3,10 @@ package ru.otus.hw.service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
@@ -19,15 +20,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(properties = "spring.shell.interactive.enabled=false")
+@ExtendWith(SpringExtension.class)
 @DisplayName("Test service tests")
 public class TestServiceTest {
 
-    @Mock
+    @MockitoBean
     private LocalizedIOService ioService;
-    @Mock
+    @MockitoBean
     private QuestionDao questionDao;
-    @InjectMocks
+    @Autowired
     private TestServiceImpl testService;
 
 
@@ -39,7 +41,7 @@ public class TestServiceTest {
         when(questionDao.findAll()).thenReturn(questions);
         when(ioService.getMessage(eq("TestService.error.answer"), anyInt()))
                 .thenReturn("Please enter a number between 1 and 3");
-        lenient().when(ioService.readIntForRangeWithPromptLocalized(anyInt(), anyInt(), anyString(), anyString()))
+        when(ioService.readIntForRangeWithPromptLocalized(anyInt(), anyInt(), anyString(), anyString()))
                 .thenReturn(1)
                 .thenReturn(4);
         TestResult testResult = testService.executeTestFor(student);
