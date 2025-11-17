@@ -20,8 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(properties = "spring.shell.interactive.enabled=false")
-@ExtendWith(SpringExtension.class)
+@SpringBootTest(properties = "spring.shell.interactive.enabled=false", classes = TestServiceImpl.class)
 @DisplayName("Test service tests")
 public class TestServiceTest {
 

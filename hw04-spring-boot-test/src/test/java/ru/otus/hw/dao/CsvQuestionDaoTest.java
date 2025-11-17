@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(properties = "spring.shell.interactive.enabled=false")
+@SpringBootTest(properties = "spring.shell.interactive.enabled=false", classes = CsvQuestionDao.class)
 @DisplayName("CsvQuestionDao Integration Test")
 public class CsvQuestionDaoTest {
 
@@ -27,14 +27,6 @@ public class CsvQuestionDaoTest {
     @Autowired
     private CsvQuestionDao csvQuestionDao;
 
-
-    @Configuration
-    static class TestConfig {
-        @Bean
-        public CsvQuestionDao csvQuestionDao(TestFileNameProvider fileNameProvider) {
-            return new CsvQuestionDao(fileNameProvider);
-        }
-    }
 
     @Test
     @DisplayName("Should correctly read questions from a CSV file")
